@@ -6,7 +6,7 @@
 \usage{
 create_dataList(data, model = 1, Kmean = 4.03, Ksd = 4, up = "up1",
   down = "down1", tt = 0.1909720833, lag_divisor = 0.0636573611,
-  depth = 0.5588, PPFDstart = 14)
+  depth = 0.5588, PPFDstart = 14, nhrs = 24)
 }
 \arguments{
 \item{data}{data.frame object with columnds for station, temperature, n2.ar, light, bp, z, and dtime, arsat, and n2sat, or oxy in the case of model == 0.}
@@ -27,7 +27,9 @@ create_dataList(data, model = 1, Kmean = 4.03, Ksd = 4, up = "up1",
 
 \item{depth}{Depth (m)}
 
-\item{PPFDstart}{Start time (hours) for calculating daily total of photosynthetic photon flux density (PPFD). Calculated by summing across column light for the next 24 hours from the first PPFDstart time.}
+\item{PPFDstart}{Start time (hours) for calculating total of photosynthetic photon flux density (PPFD). Calculated by summing across column light for the next number of hours specified from \code{nhrs} from the first PPFDstart time.}
+
+\item{nhrs}{The number of hours to calculate the total of photosynthetic photon flux density (PPFD) from \code{PPFDstart}. For example, if \code{PPFDstart = 10} and \code{nhrs = 4}, \code{PPFDtotal} will be the sum of PPFD from 10 am to 1:59 pm.}
 }
 \description{
 Creates a list of data objects to be used by stan

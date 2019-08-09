@@ -124,7 +124,7 @@ arsatfc<-function(temp, salinity, bp){
 #' @param lag_divisor The value for tt to be divided by to estimate lag time between stations for two-station model
 #' @param depth Depth (m)
 #' @param PPFDstart Start time (hours) for calculating total of photosynthetic photon flux density (PPFD). Calculated by summing across column light for the next number of hours specified from \code{nhrs} from the first PPFDstart time.
-#' @param nhrs The number of hours to calculate the total of photosynthetic photon flux density (PPFD) from \code{PPFDstart}
+#' @param nhrs The number of hours to calculate the total of photosynthetic photon flux density (PPFD) from \code{PPFDstart}. For example, if \code{PPFDstart = 10} and \code{nhrs = 4}, \code{PPFDtotal} will be the sum of PPFD from 10 am to 1:59 pm.
 #'
 #' @details Model determines which model to estimate. 0 is the oxygen model (Eq. 2 from Nifong et al), 1 is the single station model without N consumption (DN base model; Eq. 3 from Nifong et al.), 2 is the single station model with N consumption (DN + Nconsume; Eq. 4 from Nifong et al.), the  3 being the two-station model without N consumption (DN base; Eq. 5 from Nifong et al.), and 4 being the two station model with N consumption (DN N consume; Eq. 6 from Nifong et al.).
 #'
