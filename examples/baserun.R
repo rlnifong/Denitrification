@@ -18,7 +18,7 @@ library(hydroGOF)
 ########################################
 # Oxygen model
 oxy_data <- read.csv("D7ASUMetDataJune2018Day2.csv") #The file name needs to be updated
-dataList0 <- create_dataList(oxy_data, model = 0, up="up1", down="down1", tt=0.18611125, lag_divisor = 0.010947721, PPFDstart = 14, depth = 0.53594)
+dataList0 <- create_dataList(oxy_data, model = 0, up="up1", down="down1", tt=0.18611125, nhrs = 24, lag_divisor = 0.010947721, PPFDstart = 14, depth = 0.53594)
 
 # Run model Eq. 2
 mod0 <- fitmod(dataList0, model = 0)
@@ -36,7 +36,7 @@ gof(sim=values0$Est02Down_mean,obs=values0$O2Down)
 ########################################
 # One station N2 models
 onestation <- read.csv("Ditch2onestat_DDmetrop.csv")
-dataList1 <- create_dataList(onestation, model = 1, Kmean = 4.03, Ksd = 4.0, PPFDstart = 14, depth = 0.5588)
+dataList1 <- create_dataList(onestation, model = 1, Kmean = 4.03, Ksd = 4.0, PPFDstart = 14, nhrs = 24, depth = 0.5588)
 
 # Run model Eq. 3
 mod1 <- fitmod(dataList1, model = 1)
@@ -69,7 +69,7 @@ gof(sim=values2$EstN2_mean,obs=values2$N2)
 ########################################
 # Two station N2 models
 twostation <- read.csv("Ditch2Twostat_DDmetrop.csv")
-dataList2 <- create_dataList(twostation, model = 3, Kmean = 4.03, Ksd = 4.0, up = "up1", down = "down1", tt=0.1909720833, lag_divisor = 0.063657361, PPFDstart = 14, depth = 0.5588)
+dataList2 <- create_dataList(twostation, model = 3, Kmean = 4.03, Ksd = 4.0, up = "up1", down = "down1", tt=0.1909720833, lag_divisor = 0.063657361, PPFDstart = 14, nhrs = 24, depth = 0.5588)
 
 # Run model Eq. 5
 mod3 <- fitmod(dataList2, model = 3)

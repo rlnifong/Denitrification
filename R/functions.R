@@ -123,13 +123,14 @@ arsatfc<-function(temp, salinity, bp){
 #' @param tt Time between stations for two station model
 #' @param lag_divisor The value for tt to be divided by to estimate lag time between stations for two-station model
 #' @param depth Depth (m)
-#' @param PPFDstart Start time (hours) for calculating daily total of photosynthetic photon flux density (PPFD). Calculated by summing across column light for the next 24 hours from the first PPFDstart time.
+#' @param PPFDstart Start time (hours) for calculating total of photosynthetic photon flux density (PPFD). Calculated by summing across column light for the next number of hours specified from \code{nhrs} from the first PPFDstart time.
+#' @param nhrs The number of hours to calculate the total of photosynthetic photon flux density (PPFD) from \code{PPFDstart}
 #'
 #' @details Model determines which model to estimate. 0 is the oxygen model (Eq. 2 from Nifong et al), 1 is the single station model without N consumption (DN base model; Eq. 3 from Nifong et al.), 2 is the single station model with N consumption (DN + Nconsume; Eq. 4 from Nifong et al.), the  3 being the two-station model without N consumption (DN base; Eq. 5 from Nifong et al.), and 4 being the two station model with N consumption (DN N consume; Eq. 6 from Nifong et al.).
 #'
 #' @export
 #'
-create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1", down = "down1", tt = 0.1909720833, lag_divisor = 0.0636573611, depth = 0.5588, PPFDstart = 14){
+create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1", down = "down1", tt = 0.1909720833, lag_divisor = 0.0636573611, depth = 0.5588, PPFDstart = 14, nhrs = 24){
 
   # Convert data
   if(model > 0){
@@ -184,7 +185,7 @@ create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1"
 
     # Calculate daily total of PPFD
     PPFDstart <- which(chron::hours(downdata$dtime) >= PPFDstart)[1] # Get the first observation to begin calculating daily total of PPFD
-    end_ppfd <- which(downdata$dtime < (downdata$dtime[PPFDstart] + 1)) # Get all observations within 24 hours of start
+    end_ppfd <- which(downdata$dtime < (downdata$dtime[PPFDstart] + nhrs/24)) # Get all observations within 24 hours of start
     end_ppfd <- end_ppfd[length(end_ppfd)] # Whats the last observation
 
     ppfdtime <- downdata$dtime[end_ppfd] - downdata$dtime[PPFDstart] + (downdata$dtime[2] - downdata$dtime[1])
@@ -240,7 +241,7 @@ create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1"
 
     # Calculate daily total of PPFD
     PPFDstart <- which(chron::hours(data$dtime) >= PPFDstart)[1] # Get the first observation to begin calculating daily total of PPFD
-    end_ppfd <- which(data$dtime < (data$dtime[PPFDstart] + 1)) # Get all observations within 24 hours of start
+    end_ppfd <- which(data$dtime < (data$dtime[PPFDstart] + nhrs/24)) # Get all observations within 24 hours of start
     end_ppfd <- end_ppfd[length(end_ppfd)] # Whats the last observation
 
     ppfdtime <- data$dtime[end_ppfd] - data$dtime[PPFDstart] + (data$dtime[2] - data$dtime[1])
@@ -298,7 +299,7 @@ create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1"
 
     # Calculate daily total of PPFD
     PPFDstart <- which(chron::hours(downdata$dtime) >= PPFDstart)[1] # Get the first observation to begin calculating daily total of PPFD
-    end_ppfd <- which(downdata$dtime < (downdata$dtime[PPFDstart] + 1)) # Get all observations within 24 hours of start
+    end_ppfd <- which(downdata$dtime < (downdata$dtime[PPFDstart] + nhrs/24)) # Get all observations within 24 hours of start
     end_ppfd <- end_ppfd[length(end_ppfd)] # Whats the last observation
 
     ppfdtime <- downdata$dtime[end_ppfd] - downdata$dtime[PPFDstart] + (downdata$dtime[2] - downdata$dtime[1])
