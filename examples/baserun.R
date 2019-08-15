@@ -6,7 +6,7 @@ install.packages("hydroGOF")
 
 # Install code
 library(devtools)
-devtools::install_github("grantdadams/Denitrification", auth_token = "4925b42ac46f1e0aefd671e9dc0c1cf1b3157017")
+devtools::install_github("rlnifong/Denitrification", auth_token = "4925b42ac46f1e0aefd671e9dc0c1cf1b3157017")
 
 # Setup
 library(rstan)
