@@ -251,6 +251,10 @@ create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1"
 
     data_list$PPFDtotal <- sum(data$light[PPFDstart:end_ppfd])
 
+    if(model == 2 & data_list$PPFDtotal == 0){
+      warning("Total photosynthetic photon flux density (PPFDtotal) is 0: Model 2 will not work. Reason: can not divide by 0.")
+    }
+
 
     # Data size
     data_list$data_obj <- data_obj
@@ -309,6 +313,10 @@ create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1"
 
     data_list$PPFDtotal <- sum(downdata$light[PPFDstart:end_ppfd])
 
+    if(model == 4 & data_list$PPFDtotal == 0){
+      warning("Total photosynthetic photon flux density (PPFDtotal) is 0: Model 4 will not work. Reason: can not divide by 0.")
+    }
+
     # Parameters
     data_list$Kmean = Kmean
     data_list$Ksd = Ksd
@@ -340,6 +348,7 @@ create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1"
 #' @param niter Number of iterations to run for each chain (including burnin)
 #' @param burnin A positive integer specifying the number of warmup (aka burnin) iterations per chain.
 #' @param verbose TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.
+#' @param control A named \code{list} of parameters to control the sampler's behavior. See the details in the documentation for the \code{control} argument in \code{?rstan::stan}.
 #'
 #' @details Model determines which model to estimate. 0 is the oxygen model (Eq. 2 from Nifong et al), 1 is the single station model without N consumption (DN base model; Eq. 3 from Nifong et al.), 2 is the single station model with N consumption (DN + Nconsume; Eq. 4 from Nifong et al.), the  3 being the two-station model without N consumption (DN base; Eq. 5 from Nifong et al.), and 4 being the two station model with N consumption (DN N consume; Eq. 6 from Nifong et al.).
 #'
@@ -358,7 +367,7 @@ create_dataList <- function(data, model = 1, Kmean = 4.03, Ksd = 4.0, up = "up1"
 #' plotmod(StanFit = mod2, dataList = dataList, model = 4)
 #'
 #'@export
-fitmod <- function(dataList, model = 3, nChains = 2, niter = 5000, burnin = 1000, verbose = FALSE, incl_DN = TRUE){
+fitmod <- function(dataList, model = 3, nChains = 2, niter = 5000, burnin = 1000, verbose = FALSE, incl_DN = TRUE, control = NULL){
 
   # Model set up
   dataList$mod = model
@@ -381,13 +390,22 @@ fitmod <- function(dataList, model = 3, nChains = 2, niter = 5000, burnin = 1000
     }
   }
 
+  # Divide by zero warnings
+  if(model == 4 & dataList$PPFDtotal == 0){
+    warning("Total photosynthetic photon flux density (PPFDtotal) is 0: Model 4 will not work. Reason: can not divide by 0.")
+  }
+  if(model == 2 & dataList$PPFDtotal == 0){
+    warning("Total photosynthetic photon flux density (PPFDtotal) is 0: Model 2 will not work. Reason: can not divide by 0.")
+  }
+
+
   # Get model
   stan_directory <- system.file("executables",package="Denitrification")
   old_wd <- getwd()
   setwd(stan_directory)
 
   # Estimate
-  StanFit <- rstan::stan("nn2_model.stan", data = dataList, iter = niter, chains = nChains, verbose = verbose, warmup = burnin)
+  StanFit <- rstan::stan("nn2_model.stan", data = dataList, iter = niter, chains = nChains, verbose = verbose, warmup = burnin, control = control)
   setwd(old_wd)
 
   # Rename parameters

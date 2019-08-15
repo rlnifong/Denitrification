@@ -5,7 +5,7 @@
 \title{Estimate model}
 \usage{
 fitmod(dataList, model = 3, nChains = 2, niter = 5000,
-  burnin = 1000, verbose = FALSE, incl_DN = TRUE)
+  burnin = 1000, verbose = FALSE, incl_DN = TRUE, control = NULL)
 }
 \arguments{
 \item{dataList}{dataList created by \code{create_dataList}}
@@ -19,6 +19,8 @@ fitmod(dataList, model = 3, nChains = 2, niter = 5000,
 \item{burnin}{A positive integer specifying the number of warmup (aka burnin) iterations per chain.}
 
 \item{verbose}{TRUE or FALSE: flag indicating whether to print intermediate output from Stan on the console, which might be helpful for model debugging.}
+
+\item{control}{A named \code{list} of parameters to control the sampler's behavior. See the details in the documentation for the \code{control} argument in \code{?rstan::stan}.}
 }
 \description{
 fits a stan model and returns a stan model object
